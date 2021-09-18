@@ -5,16 +5,14 @@
     </div>
     <div class="hero">
       <SideMenu/>
-      <div class="content">
-        General Information
-        <!-- <div class="details"></div> -->
-      </div>
+      <PersonInfo/>
     </div>
   </div>
 </template>
 
 <script>
 import SideMenu from "./SideMenu.vue"
+import PersonInfo from "./PersonInfo.vue"
 
 export default {
   name: 'HelloWorld',
@@ -22,12 +20,11 @@ export default {
     msg: String
   },
   components: {
-    SideMenu
+    SideMenu,
+    PersonInfo,
   },
   data() {
     return {
-      after: null,
-      showMoreEnabled: true,
     }
   },
 }

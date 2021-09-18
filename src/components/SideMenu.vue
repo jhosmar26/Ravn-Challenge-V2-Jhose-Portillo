@@ -4,7 +4,7 @@
       class="menu_item"
       v-for="person in allPeople.people"
       :key="person.index"
-      v-on:click="handlePerson(person.id)"
+      v-on:click="handleClick(person.id)"
     >
       <div>
         <div class="name">
@@ -89,13 +89,16 @@ export default {
         },
       })
     },
+    handleClick(id) {
+      this.$root.$refs.PersonInfo.handlePerson(id);
+    },
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.menu{
+  .menu{
     border-right: 1px solid #0000001A;
     min-width: 24rem;
     height: calc(100vh - 3.45rem);
