@@ -6,9 +6,10 @@
     <div class="hero">
       <div class="items"></div>
       <div class="content">
-        <div v-for="e in allPeople" :key="e.id">
+        <div v-for="e in allPeople.people" :key="e.index">
           {{ e.name }}
         </div>
+        <a v-on:click.prevent="loadMore">aaaa</a>
       </div>
     </div>
   </div>
@@ -22,18 +23,61 @@ export default {
   props: {
     msg: String
   },
+  data() {
+    return {
+      after: null,
+      showMoreEnabled: true,
+    }
+  },
   apollo: {
     allPeople: gql`
-      query {
-        allPeople{
+      query firstFivePeople($after: String){
+        allPeople(first: 5, after: $after){
           people{
             name
-            birthYear
-            id
+          }
+          pageInfo{
+            endCursor
           }
         }
       }
-    `
+    `,
+    // Initial variables
+    variables: {
+      after: null
+    }
+  },
+  methods: {
+    loadMore() {
+      // Fetch more data and transform the original result
+      this.$apollo.queries.allPeople.fetchMore({
+        // New variables
+        variables: {
+          after: this.$apolloData.data.allPeople.pageInfo.endCursor,
+        },
+        // Transform the previous result with new data
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const newPageInfo = fetchMoreResult.allPeople.pageInfo.endCursor
+          const newPeople = fetchMoreResult.allPeople.people
+          const hasMore = fetchMoreResult.allPeople.hasMore
+
+          this.showMoreEnabled = hasMore
+
+          return {
+            allPeople: {
+              __typename: previousResult.allPeople.__typename,
+              // Merging the tag list
+              people: [...previousResult.allPeople.people, ...newPeople],
+              hasMore,
+              pageInfo: {
+                __typename: previousResult.allPeople.pageInfo.__typename,
+                endCursor: newPageInfo
+              }
+            },
+          }
+        },
+      })
+    },
   }
 }
 </script>
