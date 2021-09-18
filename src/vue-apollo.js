@@ -9,7 +9,7 @@ Vue.use(VueApollo)
 const AUTH_TOKEN = 'apollo-token'
 
 // Http endpoint
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'https://swapi-graphql.netlify.app'
+const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'https://swapi-graphql.netlify.app/.netlify/functions/index'
 // Files URL root
 export const filesRoot = process.env.VUE_APP_FILES_ROOT || httpEndpoint.substr(0, httpEndpoint.indexOf('/graphql'))
 
@@ -18,6 +18,7 @@ Vue.prototype.$filesRoot = filesRoot
 // Config
 const defaultOptions = {
   // You can use `https` for secure connection (recommended in production)
+
   httpEndpoint,
   // You can use `wss` for secure connection (recommended in production)
   // Use `null` to disable subscriptions
