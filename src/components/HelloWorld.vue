@@ -11,7 +11,7 @@
               {{ e.name }}
             </div>
             <div class="description">
-              {{ e.name }}
+              {{ e.species ? e.species.name : e.gender }} from {{ e.homeworld.name }}
             </div>
           </div>
           <div class="arrow"></div>
@@ -43,6 +43,14 @@ export default {
         allPeople(first: 5, after: $after){
           people{
             name
+            gender
+            species{
+              name
+              classification
+            }
+            homeworld {
+              name
+            }
           }
           pageInfo{
             endCursor
@@ -113,7 +121,6 @@ export default {
   .menu_item{
     margin-left: 1rem;
     padding: 1rem 2rem 1rem 0;
-    padding-right: 1rem;
     font-weight: bold;
     border-bottom: 1px solid #0000001A;
     display: flex;
