@@ -5,20 +5,30 @@
     </div>
     <div class="hero">
       <div class="menu">
-        <div class="menu_item" v-for="e in allPeople.people" :key="e.index">
+        <div>
+        </div>
+        <div
+          class="menu_item"
+          v-for="person in allPeople.people"
+          :key="person.index"
+          v-on:click="handlePerson(person.id)"
+        >
           <div>
             <div class="name">
-              {{ e.name }}
+              {{ person.name }}
             </div>
             <div class="description">
-              {{ e.species ? e.species.name : e.gender }} from {{ e.homeworld.name }}
+              {{ person.species ? person.species.name : person.gender }} from {{ person.homeworld.name }}
             </div>
           </div>
           <div class="arrow"></div>
         </div>
         <a v-on:click.prevent="loadMore">aaaa</a>
       </div>
-      <div class="content"></div>
+      <div class="content">
+        General Information
+        <!-- <div class="details"></div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +52,7 @@ export default {
       query firstFivePeople($after: String){
         allPeople(first: 5, after: $after){
           people{
+            id
             name
             gender
             species{
