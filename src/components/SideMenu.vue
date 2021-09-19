@@ -131,6 +131,10 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+  }
+  .menu_item:hover .arrow{
+    border-color: #00000091;
   }
   .menu_item .name{
     font-size: 17px;
@@ -146,6 +150,7 @@ export default {
     width: .5rem;
     height: .5rem;
     transform: rotate(45deg);
+    transition: border-color .2s;
   }
   .loader{
     margin-top: 1rem;
