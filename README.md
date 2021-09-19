@@ -1,5 +1,7 @@
 # ravn-challenge-v2-jhose-portillo
 
+This project is a layout which consume data from an external GRAPHQL API of Star Wars characters.
+
 ## Project setup
 ```
 npm install
@@ -9,16 +11,16 @@ npm install
 ```
 npm run serve
 ```
+## At the beginning the app load 5 items and it iterates until the parent element height becomes higher than the clients screen.
+![plot](./src/assets/loading.png)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## If you pick any Star Wars character, the Person information will be showed in the right side of the screen.
+![plot](./src/assets/without_car.png)
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Also you can notice that if the person doesn't have vehicles that Component wont be showed.
+![plot](./src/assets/with_car.png)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+For this project I used the next technologies:
+* VueJS
+* GraphQl
+* Apollo
