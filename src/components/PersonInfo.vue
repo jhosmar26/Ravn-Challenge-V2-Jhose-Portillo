@@ -58,7 +58,6 @@ export default ({
   },
   methods: {
     handlePerson(id) {
-      console.log(id)
       this.$apollo.query({
         query: gql `
           query byId($id: ID!) {

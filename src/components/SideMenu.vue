@@ -1,22 +1,29 @@
 <template>
-  <div class="menu">
-    <div
-      class="menu_item"
-      v-for="person in allPeople.people"
-      :key="person.index"
-      v-on:click="handleClick(person.id)"
-    >
-      <div>
-        <div class="name">
-          {{ person.name }}
+  <div class="menu" ref="menu" v-on:scroll="handleScroll">
+    <div ref="menuItems">
+      <div
+        class="menu_item"
+        v-for="person in allPeople.people"
+        :key="person.index"
+        v-on:click="handleClick(person.id)"
+      >
+        <div>
+          <div class="name">
+            {{ person.name }}
+          </div>
+          <div class="description">
+            {{ person.species ? person.species.name : person.gender }} from {{ person.homeworld.name }}
+          </div>
         </div>
-        <div class="description">
-          {{ person.species ? person.species.name : person.gender }} from {{ person.homeworld.name }}
-        </div>
+        <div class="arrow"></div>
       </div>
-      <div class="arrow"></div>
     </div>
-    <a v-on:click.prevent="loadMore">aaaa</a>
+    <div class="loader" :style="this.showMoreEnabled ? '' : 'display:none;'">
+      <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      <span class="loader_text">
+        Loading
+      </span>
+    </div>
   </div>
 </template>
 
@@ -30,6 +37,9 @@ export default {
       after: null,
       showMoreEnabled: true,
     }
+  },
+  updated() {
+    this.compareSizeToLoad ? this.handleScroll() : "";
   },
   apollo: {
     allPeople: gql`
@@ -69,10 +79,11 @@ export default {
         // Transform the previous result with new data
         updateQuery: (previousResult, { fetchMoreResult }) => {
           const newPageInfo = fetchMoreResult.allPeople.pageInfo.endCursor
+          if (newPageInfo === null){
+              this.showMoreEnabled = false;
+          }
           const newPeople = fetchMoreResult.allPeople.people
           const hasMore = fetchMoreResult.allPeople.hasMore
-
-          this.showMoreEnabled = hasMore
 
           return {
             allPeople: {
@@ -91,6 +102,14 @@ export default {
     },
     handleClick(id) {
       this.$root.$refs.PersonInfo.handlePerson(id);
+    },
+    compareSizeToLoad(){
+      return this.$refs.menuItems.scrollHeight < this.$refs.menu.offsetHeight || this.$refs.menu.scrollTop + this.$refs.menu.offsetHeight === this.$refs.menu.scrollHeight
+    },
+    handleScroll() {
+      if(this.compareSizeToLoad() && this.showMoreEnabled) {
+        this.loadMore()
+      }
     },
   }
 }
@@ -127,5 +146,98 @@ export default {
     width: .5rem;
     height: .5rem;
     transform: rotate(45deg);
+  }
+  .loader{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 17px;
+    color: var(--textLight);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .loader_text{
+    font-weight: bold;
+    color: var(--textLight);
+  }
+
+  /* LOADER SPINNER */
+  .lds-spinner {
+    color: official;
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  .lds-spinner div {
+    transform-origin: 7px 7px;
+    animation: lds-spinner 1.2s linear infinite;
+  }
+  .lds-spinner div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -3px;
+    right: 12px;
+    width: 2px;
+    height: 5px;
+    border-radius: 20%;
+    background: #000;
+  }
+  .lds-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.1s;
+  }
+  .lds-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -1s;
+  }
+  .lds-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.9s;
+  }
+  .lds-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.8s;
+  }
+  .lds-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.7s;
+  }
+  .lds-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.6s;
+  }
+  .lds-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.5s;
+  }
+  .lds-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.4s;
+  }
+  .lds-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.3s;
+  }
+  .lds-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.2s;
+  }
+  .lds-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.1s;
+  }
+  .lds-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+  }
+  @keyframes lds-spinner {
+    0% {
+      opacity: .4;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 </style>
