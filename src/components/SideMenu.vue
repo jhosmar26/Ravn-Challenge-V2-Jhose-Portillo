@@ -107,9 +107,9 @@ export default {
       return this.$refs.menuItems.scrollHeight < this.$refs.menu.offsetHeight || this.$refs.menu.scrollTop + this.$refs.menu.offsetHeight === this.$refs.menu.scrollHeight
     },
     handleScroll() {
-      // if(this.compareSizeToLoad() && this.showMoreEnabled) {
-      //   this.loadMore()
-      // }
+      if(this.compareSizeToLoad() && this.showMoreEnabled) {
+        this.loadMore();
+      }
     },
   }
 }
